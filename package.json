@@ -1,0 +1,30 @@
+{
+  "name": "hok-reports",
+  "version": "1.0.0",
+  "description": "\"# HOK\"",
+  "scripts": {
+    "start": "nodemon src/app.js  --exec babel-node  --presets es2015,stage-2",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaraHal/HOK.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SaraHal/HOK/issues"
+  },
+  "homepage": "https://github.com/SaraHal/HOK#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "nodemon": "^1.17.5"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "cors": "^2.8.4"
+  }
+}
