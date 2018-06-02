@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<style>
+    * {
+        direction: rtl;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-color: transparent;
+        font-size: 9pt;
+    }
+
+    td {
+        padding: 5px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f5f5f5;
+    }
+
+    .header {
+        text-align: center;
+        margin: 5px;
+    }
+
+    .pager {
+        font-size: 8pt;
+        float: left;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <h3>{{company.name }} </h3>
+        <h5>{{company.address }}</h5>
+        <h3> הוראות קבע ליום {{day}}</h3>
+        <span>{{month}}</span>
+
+        <span>$ = {{dollarRate}} </span>
+    </div>
+    <table>
+        <tr>
+            <td>{{header.reference}}</td>
+            <td>{{header.project}}</td>
+            <td>{{header.name}}</td>
+            <td>{{header.sum}}</td>
+            <td>{{header.account}}</td>
+            <td>{{header.startDate}}</td>
+            <td>{{header.endDate}}</td>
+            <td>{{header.address}}</td>
+            <td>{{header.city}}</td>
+            <td>{{header.phone}}</td>
+            <td>{{header.col10}}</td>
+            <td>{{header.col11}}</td>
+            <td>{{header.col12}}</td>
+        </tr>
+        {{#data}}
+        <tr>
+            <td>{{reference}}</td>
+            <td>{{project}}</td>
+            <td>{{name}}</td>
+            <td>{{sum}}</td>
+            <td>{{account}}</td>
+            <td>{{startDate}}</td>
+            <td>{{endDate}}</td>
+            <td>{{address}}</td>
+            <td>{{city}}</td>
+            <td>{{phone}}</td>
+            <td>{{col10}}</td>
+            <td>{{col11}}</td>
+            <td>{{col12}}</td>
+        </tr>{{/data}}
+
+    </table>
+    {{totalSum}}
+</body>
+
+</html>

@@ -24,7 +24,14 @@
     "nodemon": "^1.17.5"
   },
   "dependencies": {
+    "archiver": "^2.1.1",
+    "cors": "^2.8.4",
+    "dateformat": "^3.0.3",
     "express": "^4.16.2",
-    "cors": "^2.8.4"
+    "html-pdf": "^2.2.0",
+    "iconv-lite": "^0.4.23",
+    "mustache": "^2.3.0",
+    "path-exists": "^3.0.0",
+    "stream-buffers": "^3.0.2"
   }
 }
