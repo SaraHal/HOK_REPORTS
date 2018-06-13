@@ -1,0 +1,133 @@
+<html>
+<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.0.0/css/bootstrap.min.css" integrity="sha384-P4uhUIGk/q1gaD/NdgkBIl3a6QywJjlsFJFk7SPRdruoGddvRVSwv5qFnvZ73cpz"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+<style>
+    body {
+        direction: rtl;
+    }
+</style>
+
+<body>
+    <div id="app" class="container">
+        <h1>דו"ח גביה</h1>
+        <div class="row">
+            <div class="input-group mb-3 col-sm-4">
+              
+                <input id="reportDate" v-model="reportDate" type="date" required class="form-control" v-on:blur="getCompaniesByReportDate">
+                <div class="input-group-append">                      
+                        <button id="btnGetCompany" @click="getCompaniesByReportDate" class="btn btn-outline-secondary" type="submit">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                    </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <button id="btnGetZip" @click="downloadZip" class="btn btn-link">download zip</button>
+        </div>
+        <div class="row">
+            <div class="list-group">
+                <div id="company " v-for="company in companyList" class="list-group-item">
+
+                    <input type="checkbox" v-model="company.includeInZip" />
+
+                    <!-- <span>{{company.key}} </span>| -->
+
+                    <!-- <span>{{company.code}} </span> -->
+
+                    <button @click="downloadReport(company.key)" class="btn btn-link">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+
+                    <span>{{company.name}} </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js" integrity="sha384-54+cucJ4QbVb99v8dcttx/0JRx4FHMmhOWi4W+xrXpKcsKQodCBwAvu3xxkZAwsH"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        const service = (() => {
+            const reportServiceAddress = 'http://localhost:3000/reports/api';
+
+            const downloadFile = (file) => {
+                const { fileName, buffer } = file;
+                const blob = new Blob([new Uint8Array(buffer.data)]);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                a.click();
+            }
+
+            const getCompaniesByReportDate = (reportDate) => {
+                var servicePath = `${reportServiceAddress}/company?date=${reportDate}`;
+                return fetch(servicePath)
+                    .then((response) => response.json());
+            }
+
+            const getReportFile = (companyKey, reportDate) => {
+                var servicePath = `${reportServiceAddress}/${companyKey}?date=${reportDate}`;
+                return fetch(servicePath)
+                    .then(response => response.json())
+                    .then(downloadFile);
+
+            }
+
+            const getReportsZipFile = (companyKeyList, reportDate) => {
+                var servicePath = `${reportServiceAddress}/?date=${reportDate}&companyList[]=${companyKeyList.join("&companyList[]=")}`;
+                return fetch(servicePath)
+                    .then(response => response.json())
+                    .then(buffer => downloadFile({ fileName: `${reportDate}_${new Date().toUTCString()}.zip`, buffer }));
+            }
+            return {
+                getCompaniesByReportDate
+                , getReportFile
+                , getReportsZipFile
+            }
+        })();
+
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                companyList: [],
+                reportDate: ''
+            },
+            methods: {
+                getCompaniesByReportDate: function () {
+                    const self = this;
+                    service.getCompaniesByReportDate(self.reportDate)
+                        .then(data => {
+                            self.companyList = data.map(company => {
+                                company.includeInZip = true;
+                                return company;
+                            })
+                        });
+                },
+                downloadReport: function (companyKey) {
+                    service.getReportFile(companyKey, this.reportDate);
+                },
+                downloadZip: function () {
+                    const companyKeyList = this.companyList.filter(company => company.includeInZip).map(company => company.key);
+
+                    service.getReportsZipFile(companyKeyList, this.reportDate)
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>

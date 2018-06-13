@@ -11,7 +11,7 @@ import { getFeeListByDate, getCompanyFeeByDate } from './fees';
 const xlsMapping = {
     ' טלפון': 'telephone',
     ' תוכנית': 'program',
-    ' מ.תוכנית': 'program',
+    ' מ.תוכנית': 'programNo',
     ' שם': 'name',
     ' מס\' חשבון': 'account',
     ' ת.הצטרפות': 'joinDate',
@@ -25,10 +25,10 @@ const xlsMapping = {
 }
 
 const mapReportData = (companyDetails, fee, collectionData) => {
-  
+
     return {
         company: {
-            name: companyDetails.companyName,
+            name: companyDetails.name,
             address: companyDetails.address
         },
         dollarRate: fee.dollarRate,
@@ -36,6 +36,7 @@ const mapReportData = (companyDetails, fee, collectionData) => {
         date: fee.date,
         month: dateForamt(new Date(fee.date), "mmmm yyyy"),
         data: collectionData.records.map(item => {
+            item.programNo = item.programNo.slice(-5);
             item.account = item.account.split(" ").reverse().join(" ")
             item.startDate = item.startDate.substr(4);
             item.endDate = item.endDate.substr(4);
@@ -48,11 +49,11 @@ const mapReportData = (companyDetails, fee, collectionData) => {
 }
 
 const getReportData = (companyKey, date) => {
-        
+
     const collectionDatafilePath = `${dataPath}\\${companyKey}\\hok_bank\\XS${dateForamt(new Date(date), 'ddmmyy')}.XLS`;
 
     const getCompanyPromise = getCompany(companyKey);
-    const getCompanyFeeByDatePromise = getCompanyPromise.then(company => getCompanyFeeByDate(company.code, date));   
+    const getCompanyFeeByDatePromise = getCompanyPromise.then(company => getCompanyFeeByDate(company.code, date));
     const getCollectionDataPromise = xlsReader.read(collectionDatafilePath, xlsMapping);
 
     return Promise.all([getCompanyPromise, getCompanyFeeByDatePromise, getCollectionDataPromise])
@@ -60,7 +61,9 @@ const getReportData = (companyKey, date) => {
 
 }
 
-export const getReportBuffer = (companyKey, date) => {
+export const getReportBuffer = (companyKey, date) => { 
+    if (!companyKey)
+        throw new Error('compenyKey is required');
     return getReportData(companyKey, date)
         .then(data => createHtml(data, './src/resources/collectionReport/template.html'))
         .then(html => createPdf(html, pdfReportConfig));

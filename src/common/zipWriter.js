@@ -1,5 +1,5 @@
 import archiver from 'archiver'
-import streamBuffers from "stream-buffers";
+import streamBuffers from 'stream-buffers';
 
 export const getZip = files => {
     const outputStreamBuffer = new streamBuffers.WritableStreamBuffer({
@@ -17,13 +17,11 @@ export const getZip = files => {
     archive.finalize();
 
 
-    const promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         outputStreamBuffer.on('finish', function () {
             resolve(outputStreamBuffer.getContents());
         });
     });
 
-
-    return promise;
 
 }

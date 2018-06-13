@@ -8,7 +8,7 @@ const dbfMapping = {
     "MOSADNAME": "companyName",
     "CODNOSE": "companyCode",
     "SCUMGVI": "totalSum",
-    "CAMUTGVI": "CAMUTGVI",
+    "CAMUTGVI": "amount",
     "SCUMNEW": "SCUMNEW",
     "CAMUTNEW": "CAMUTNEW",
     "AMLGVI": "AMLGVI",

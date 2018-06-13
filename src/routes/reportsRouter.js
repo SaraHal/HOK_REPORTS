@@ -1,27 +1,37 @@
 import express from 'express';
 import { getReportFile, getReportCompanyList, getReportFiles } from '../services/collectionReport'
+import path from 'path';
 
 const reportRouter = express.Router();
 
-reportRouter.route('/company')
-    .get(function (req, res) {
+reportRouter.route('/api/company')
+    .get(function (req, res, next) {
         var { date } = req.query;
-        getReportCompanyList(date).then(data => res.send(data));
+        getReportCompanyList(date)
+            .then(data => res.send(data))
+            .catch(next);
     });
 
 
-reportRouter.route('/:companyId')
+reportRouter.route('/api/:companyId')
     .get(function (req, res) {
         const { companyId } = req.params,
             { date } = req.query;
         getReportFile(date, companyId).then(data => res.send(data));
     });
 
-reportRouter.route('/')
-    .get(function (req, res) {
+reportRouter.route('/api/')
+    .get(function (req, res, next) {
         const { companyList } = req.query;
         const { date } = req.query;
-        getReportFiles(date, companyList).then(data => res.send(data));
+        getReportFiles(date, companyList)
+            .then(data => res.send(data))
+            .catch(ne => console.log(ne));
+    });
+
+reportRouter.route('/')
+    .get(function (req, res, next) {
+        res.sendFile(path.resolve('src/pages/collecationReport.html'));
     });
 
 export default reportRouter;

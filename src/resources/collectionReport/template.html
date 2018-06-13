@@ -13,7 +13,7 @@
     }
 
     td {
-        padding: 5px;
+        padding: 7px;
     }
 
     tr:nth-child(even) {
@@ -29,52 +29,58 @@
         font-size: 8pt;
         float: left;
     }
+
+    .sum {
+        direction: ltr;
+        margin: 40px;
+    }
 </style>
 
 <body>
     <div class="header">
         <h3>{{company.name }} </h3>
-        <h5>{{company.address }}</h5>
+
         <h3> הוראות קבע ליום {{day}}</h3>
+        <span> {{dollarRate}} = $ </span>
+        &nbsp;&nbsp;
         <span>{{month}}</span>
 
-        <span>$ = {{dollarRate}} </span>
     </div>
     <table>
         <tr>
             <td>{{header.reference}}</td>
-            <td>{{header.project}}</td>
+            <td>{{header.programNo}}</td>
             <td>{{header.name}}</td>
             <td>{{header.sum}}</td>
             <td>{{header.account}}</td>
+         
             <td>{{header.startDate}}</td>
             <td>{{header.endDate}}</td>
-            <td>{{header.address}}</td>
-            <td>{{header.city}}</td>
-            <td>{{header.phone}}</td>
-            <td>{{header.col10}}</td>
-            <td>{{header.col11}}</td>
-            <td>{{header.col12}}</td>
+            <td> {{header.address}} \ {{header.telephone}}</td>
+        
+
         </tr>
         {{#data}}
         <tr>
             <td>{{reference}}</td>
-            <td>{{project}}</td>
+            <td>{{programNo}}</td>
             <td>{{name}}</td>
             <td>{{sum}}</td>
             <td>{{account}}</td>
+           
             <td>{{startDate}}</td>
             <td>{{endDate}}</td>
-            <td>{{address}}</td>
-            <td>{{city}}</td>
-            <td>{{phone}}</td>
-            <td>{{col10}}</td>
-            <td>{{col11}}</td>
-            <td>{{col12}}</td>
+            <td>{{city}}&nbsp; {{address}}  &nbsp;&nbsp; {{telephone}}</td>
+          
+
         </tr>{{/data}}
 
     </table>
-    {{totalSum}}
+
+    <div class="sum">
+        <b> סה"כ: {{totalSum}} ש"ח</b>
+    </div>
+
 </body>
 
 </html>

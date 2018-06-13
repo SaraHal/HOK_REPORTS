@@ -5,10 +5,6 @@ import { getReportBuffer, getCompanyListByReportDate } from '../core/collectionR
 import { dataPath } from '../../config.json'
 import { getZip } from '../common/zipWriter';
 
-// const getZip = buffers => {
-//     writeFiles();
-//     return `${buffers}`;
-// }
 
 const getReportFolderPath = (companyId) => `${dataPath}\\${companyId}\\hok_bank`;
 
@@ -41,9 +37,12 @@ export const getReportFile = (date, companyId) => {
 };
 
 export const getReportFiles = (date, companyList) => {
-
     return Promise.all(companyList.map(companyId => {
         return getReportFile(date, companyId);
     }))
-        .then(getZip);
+        .then(getZip)
+        .then(zipFile => zipFile.toJSON())
+        
+        .catch(console.log)
+
 };
