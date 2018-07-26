@@ -28,6 +28,8 @@
     .pager {
         font-size: 8pt;
         float: left;
+        direction: ltr;
+
     }
 
     .sum {
@@ -37,7 +39,10 @@
 </style>
 
 <body>
+
+
     <div class="header">
+
         <h3>{{company.name }} </h3>
 
         <h3> הוראות קבע ליום {{day}}</h3>
@@ -53,11 +58,11 @@
             <td>{{header.name}}</td>
             <td>{{header.sum}}</td>
             <td>{{header.account}}</td>
-         
+
             <td>{{header.startDate}}</td>
             <td>{{header.endDate}}</td>
             <td> {{header.address}} \ {{header.telephone}}</td>
-        
+
 
         </tr>
         {{#data}}
@@ -67,11 +72,12 @@
             <td>{{name}}</td>
             <td>{{sum}}</td>
             <td>{{account}}</td>
-           
+
             <td>{{startDate}}</td>
             <td>{{endDate}}</td>
-            <td>{{city}}&nbsp; {{address}}  &nbsp;&nbsp; {{telephone}}</td>
-          
+            <td>{{city}}</td>
+            <td> {{address}}</td>
+            <td> {{telephone}}</td>
 
         </tr>{{/data}}
 

@@ -36,6 +36,7 @@ const mapReportData = (companyDetails, fee, collectionData) => {
         date: fee.date,
         month: dateForamt(new Date(fee.date), "mmmm yyyy"),
         data: collectionData.records.map(item => {
+            item.name = item.name.slice(-15);
             item.programNo = item.programNo.slice(-5);
             item.account = item.account.split(" ").reverse().join(" ")
             item.startDate = item.startDate.substr(4);
@@ -62,6 +63,7 @@ const getReportData = (companyKey, date) => {
 }
 
 export const getReportBuffer = (companyKey, date) => { 
+    console.log(pdfReportConfig);
     if (!companyKey)
         throw new Error('compenyKey is required');
     return getReportData(companyKey, date)
