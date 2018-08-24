@@ -62,13 +62,13 @@ const getReportData = (companyKey, date) => {
 
 }
 
-export const getReportBuffer = (companyKey, date) => { 
-    console.log(pdfReportConfig);
+export const getReportBuffer = (companyKey, date) => {
+
     if (!companyKey)
         throw new Error('compenyKey is required');
     return getReportData(companyKey, date)
         .then(data => createHtml(data, './src/resources/collectionReport/template.html'))
-        .then(html => createPdf(html, pdfReportConfig));
+        .then(html => createPdf(html, pdfReportConfig()));
 };
 
 
@@ -78,6 +78,6 @@ export const getCompanyListByReportDate = date => {
 
     return Promise.all([comapnyListPromise, feeListPromise]).then(results => {
         const [comapnyList, feeList] = results;
-        return comapnyList.filter(company => feeList.some(fee => fee.companyCode == company.code))
+        return comapnyList.filter(company => company.isActive && feeList.some(fee => fee.companyCode == company.code))
     });
 } 

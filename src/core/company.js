@@ -6,13 +6,15 @@ const dbfMapping = {
     "COMPANY": "key",
     "COMPANYHEB": "name",
     "CODNOSE": "code",
-    "ADRRES": "address"
+    "ADRRES": "address",
+    "YOMGVIA": 'collectionDate'
 }
 
 const handleGetCompanyList = records => {
     return records.map((company) => {
         company.name = company.name && company['name'].split('').reverse().join('');
         company.address = company.address && company['address'].split('').reverse().join('');
+        company.isActive = company.collectionDate !== '88';
         return company;
     });
 }

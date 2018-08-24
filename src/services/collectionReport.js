@@ -15,9 +15,9 @@ const createReportFile = (companyId, date) =>
 const getReportFileBuffer = (filePath, createReportFileCurry) => {
     return pathExists(filePath)
         .then(isExists => {
-            //  if (!isExists) {
-            return createReportFileCurry(filePath);
-            //  }
+            if (!isExists) {
+                return createReportFileCurry(filePath);
+            }
         }).then(() => {
             return readAllBytes(filePath);
         });
@@ -42,7 +42,6 @@ export const getReportFiles = (date, companyList) => {
     }))
         .then(getZip)
         .then(zipFile => zipFile.toJSON())
-        
-        .catch(console.log)
+
 
 };

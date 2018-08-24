@@ -1,11 +1,34 @@
 <html>
-<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.0.0/css/bootstrap.min.css" integrity="sha384-P4uhUIGk/q1gaD/NdgkBIl3a6QywJjlsFJFk7SPRdruoGddvRVSwv5qFnvZ73cpz"
+<link rel="stylesheet" href="./style/bootstrap.min.css" integrity="sha384-P4uhUIGk/q1gaD/NdgkBIl3a6QywJjlsFJFk7SPRdruoGddvRVSwv5qFnvZ73cpz"
     crossorigin="anonymous">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
     crossorigin="anonymous">
 <style>
     body {
         direction: rtl;
+    }
+
+    .error {
+        color: red;
+        font-weight: 300;
+
+    }
+
+    @-webkit-keyframes blinker {
+        from {
+            opacity: 1.0;
+        }
+        to {
+            opacity: 0.0;
+        }
+    }
+
+    .blink {
+        text-decoration: blink;
+        -webkit-animation-name: blinker;
+        -webkit-animation-duration: 0.3s;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
     }
 </style>
 
@@ -14,20 +37,32 @@
         <h1>דו"ח גביה</h1>
         <div class="row">
             <div class="input-group mb-3 col-sm-4">
-              
+
                 <input id="reportDate" v-model="reportDate" type="date" required class="form-control" v-on:blur="getCompaniesByReportDate">
-                <div class="input-group-append">                      
-                        <button id="btnGetCompany" @click="getCompaniesByReportDate" class="btn btn-outline-secondary" type="submit">
-                            <i class="fas fa-angle-left"></i>
-                        </button>
-                    </div>
+                <div class="input-group-append">
+                    <button id="btnGetCompany" @click="getCompaniesByReportDate" class="btn btn-outline-secondary" type="submit">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                </div>
 
             </div>
+            <span v-if="isLoadingCompanyList" class="blink">
+                טוען ...
+            </span>
+            <span v-if="errorLoadingCompanyList" class="alert alert-danger" role="alert">
+                שגיאה
+            </span>
         </div>
-        <div class="row">
-            <button id="btnGetZip" @click="downloadZip" class="btn btn-link">download zip</button>
+        <div class="row" v-if="!isLoadingCompanyList && companyList.length ">
+            <button id="btnGetZip" @click="downloadZip" class="btn btn-link" v-bind:class="{ blink: isDownloadingZip }">download zip</button>
+            <button id="btnGetZip" @click="selectAll" class="btn btn-link">בחר הכל</button>
+            <button id="btnGetZip" @click="unSelectAll" class="btn btn-link">הסר בחירה</button>
+
+            <span v-if="errorDownloadingZip" class="alert alert-danger" role="alert">
+                שגיאה בהפקת קובץ
+            </span>
         </div>
-        <div class="row">
+        <div class="row" v-if="!isLoadingCompanyList">
             <div class="list-group">
                 <div id="company " v-for="company in companyList" class="list-group-item">
 
@@ -37,92 +72,104 @@
 
                     <!-- <span>{{company.code}} </span> -->
 
-                    <button @click="downloadReport(company.key)" class="btn btn-link">
+                    <button @click="downloadReport(company.key)" class="btn btn-link" v-bind:class="{ blink: company.isDownloadingSingleReport }">
                         <i class="fas fa-arrow-down"></i>
                     </button>
 
-                    <span>{{company.name}} </span>
+                    <span class="col-md-4">{{company.name}} </span>
 
+                    <span v-if="company.errorDownloadingSingleReport" class="alert alert-danger" role="alert">
+                        שגיאה בהפקת קובץ
+                    </span>
                 </div>
             </div>
         </div>
+        <div class="row" v-if="errorNotFoundCompany">
+            <span>
+                לא בוצעה גביה ביום {{reportDate}}
+            </span>
+        </div>
+
     </div>
 
 
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="./js/externals/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    <script src="./js/externals/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js" integrity="sha384-54+cucJ4QbVb99v8dcttx/0JRx4FHMmhOWi4W+xrXpKcsKQodCBwAvu3xxkZAwsH"
+    <script src="./js/externals/bootstrap.min.js" integrity="sha384-54+cucJ4QbVb99v8dcttx/0JRx4FHMmhOWi4W+xrXpKcsKQodCBwAvu3xxkZAwsH"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-        const service = (() => {
-            const reportServiceAddress = '/reports/api';
-
-            const downloadFile = (file) => {
-                const { fileName, buffer } = file;
-                const blob = new Blob([new Uint8Array(buffer.data)]);
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                a.click();
-            }
-
-            const getCompaniesByReportDate = (reportDate) => {
-                var servicePath = `${reportServiceAddress}/company?date=${reportDate}`;
-                return fetch(servicePath)
-                    .then((response) => response.json());
-            }
-
-            const getReportFile = (companyKey, reportDate) => {
-                var servicePath = `${reportServiceAddress}/${companyKey}?date=${reportDate}`;
-                return fetch(servicePath)
-                    .then(response => response.json())
-                    .then(downloadFile);
-
-            }
-
-            const getReportsZipFile = (companyKeyList, reportDate) => {
-                var servicePath = `${reportServiceAddress}/?date=${reportDate}&companyList[]=${companyKeyList.join("&companyList[]=")}`;
-                return fetch(servicePath)
-                    .then(response => response.json())
-                    .then(buffer => downloadFile({ fileName: `${reportDate}_${new Date().toUTCString()}.zip`, buffer }));
-            }
-            return {
-                getCompaniesByReportDate
-                , getReportFile
-                , getReportsZipFile
-            }
-        })();
+    <script src="./js/externals/vue.js"></script>
+    <script src="js/services.js"></script>
+    <script>     
 
 
         var app = new Vue({
             el: '#app',
             data: {
                 companyList: [],
-                reportDate: ''
+                reportDate: '',
+                isLoadingCompanyList: false,
+                errorLoadingCompanyList: false,
+                isDownloadingZip: false,
+                errorDownloadingZip: false,
+                errorNotFoundCompany: false,
             },
             methods: {
                 getCompaniesByReportDate: function () {
                     const self = this;
+                    self.isLoadingCompanyList = true;
+                    self.errorLoadingCompanyList = false;
+                    self.errorDownloadingZip = false;
                     service.getCompaniesByReportDate(self.reportDate)
                         .then(data => {
-                            self.companyList = data.map(company => {
+                            self.companyList = data.sort((c1, c2) => {
+                                return c1.name.localeCompare(c2.name);
+                            }).map(company => {
                                 company.includeInZip = true;
+                                company.isDownloadingSingleReport = false;
+                                company.errorDownloadingSingleReport = false;
                                 return company;
-                            })
+                            });
+                            self.errorNotFoundCompany = !self.companyList.length;
+                        })
+                        .catch(ex => {
+                            self.errorLoadingCompanyList = true;
+                        })
+                        .finally(() => {
+                            self.isLoadingCompanyList = false;
                         });
                 },
                 downloadReport: function (companyKey) {
-                    service.getReportFile(companyKey, this.reportDate);
+                    const self = this;
+                    const company = this.companyList.find(company => company.key == companyKey);
+                    company.isDownloadingSingleReport = true;
+                    company.errorDownloadingSingleReport = false;
+                    service.getReportFile(companyKey, this.reportDate)
+                        .catch(ex => {
+                            company.errorDownloadingSingleReport = true;
+                        }).finally(() => {
+                            company.isDownloadingSingleReport = false;
+                        });
                 },
                 downloadZip: function () {
                     const companyKeyList = this.companyList.filter(company => company.includeInZip).map(company => company.key);
-
+                    const self = this;
+                    this.isDownloadingZip = true;
+                    this.errorDownloadingZip = false;
                     service.getReportsZipFile(companyKeyList, this.reportDate)
+                        .catch(ex => {
+                            self.errorDownloadingZip = true;
+                        }).finally(() => {
+                            self.isDownloadingZip = false;
+                        });
+                },
+                unSelectAll: function () {
+                    this.companyList.forEach(company => company.includeInZip = false);
+                },
+                selectAll: function () {
+                    this.companyList.forEach(company => company.includeInZip = true);
                 }
             }
         });

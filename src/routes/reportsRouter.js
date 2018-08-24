@@ -14,10 +14,11 @@ reportRouter.route('/api/company')
 
 
 reportRouter.route('/api/:companyId')
-    .get(function (req, res) {
+    .get(function (req, res, next) {
         const { companyId } = req.params,
             { date } = req.query;
-        getReportFile(date, companyId).then(data => res.send(data));
+        getReportFile(date, companyId).then(data => res.send(data))
+            .catch(next);
     });
 
 reportRouter.route('/api/')
@@ -26,7 +27,7 @@ reportRouter.route('/api/')
         const { date } = req.query;
         getReportFiles(date, companyList)
             .then(data => res.send(data))
-            .catch(ne => console.log(ne));
+            .catch(next);
     });
 
 reportRouter.route('/')
