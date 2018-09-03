@@ -1,5 +1,5 @@
 import express from 'express';
-import { getReportFile, getReportCompanyList, getReportFiles } from '../services/collectionReport'
+import { getReportFile, getReportCompanyList, getReportFiles ,postReportFile} from '../services/collectionReport'
 import path from 'path';
 
 const reportRouter = express.Router();
@@ -18,6 +18,15 @@ reportRouter.route('/api/:companyId')
         const { companyId } = req.params,
             { date } = req.query;
         getReportFile(date, companyId).then(data => res.send(data))
+            .catch(next);
+    });
+
+reportRouter.route('/api/:companyId')
+    .post(function (req, res, next) {
+        const { companyId } = req.params,
+            { date } = req.query;
+        postReportFile(date, companyId)
+            .then(data => res.send(data))
             .catch(next);
     });
 

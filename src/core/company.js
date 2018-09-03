@@ -7,7 +7,8 @@ const dbfMapping = {
     "COMPANYHEB": "name",
     "CODNOSE": "code",
     "ADRRES": "address",
-    "YOMGVIA": 'collectionDate'
+    "YOMGVIA": 'collectionDate',
+    "EMAIL":'email'
 }
 
 const handleGetCompanyList = records => {

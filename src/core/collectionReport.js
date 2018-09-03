@@ -62,7 +62,7 @@ const getReportData = (companyKey, date) => {
 
 }
 
-export const getReportBuffer = (companyKey, date) => {
+export const getReportContent = (companyKey, date) => {
 
     if (!companyKey)
         throw new Error('compenyKey is required');

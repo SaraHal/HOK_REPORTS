@@ -8,8 +8,8 @@ const service = (() => {
     }
 
     const downloadFile = (file) => {
-        const { fileName, buffer } = file;
-        const blob = new Blob([new Uint8Array(buffer.data)]);
+        const { fileName, content } = file;
+        const blob = new Blob([new Uint8Array(content.data)]);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -35,16 +35,29 @@ const service = (() => {
 
     }
 
+    const sendReportFile = (companyKey, reportDate) => {
+        var servicePath = `${reportServiceAddress}/${companyKey}?date=${reportDate}`;
+        return fetch(servicePath, {
+            method: 'POST'
+        })
+            .then(handleException)
+            .then(response => response.json())
+            .then(console.log);
+
+
+    }
+
     const getReportsZipFile = (companyKeyList, reportDate) => {
         var servicePath = `${reportServiceAddress}/?date=${reportDate}&companyList[]=${companyKeyList.join("&companyList[]=")}`;
         return fetch(servicePath)
             .then(handleException)
             .then(response => response.json())
-            .then(buffer => downloadFile({ fileName: `${reportDate}_${new Date().toUTCString()}.zip`, buffer }));
+            .then(content => downloadFile({ fileName: `${reportDate}_${new Date().toUTCString()}.zip`, content }));
     }
     return {
         getCompaniesByReportDate
         , getReportFile
         , getReportsZipFile
+        , sendReportFile
     }
 })();
