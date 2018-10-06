@@ -1,5 +1,5 @@
 import express from 'express';
-import { getReportFile, getReportCompanyList, getReportFiles ,postReportFile} from '../services/collectionReport'
+import { getReportFile, getReportCompanyList, getReportFiles, postReportFile } from '../services/collectionReport'
 import path from 'path';
 
 const reportRouter = express.Router();
@@ -41,7 +41,8 @@ reportRouter.route('/api/')
 
 reportRouter.route('/')
     .get(function (req, res, next) {
-        res.sendFile(path.resolve('src/pages/collecationReport.html'));
+        console.log(path.join(__dirname, 'pages'),path.join(__dirname, '../pages'));
+        res.sendFile(path.join(__dirname, '../pages/collecationReport.html'));
     });
 
 export default reportRouter;
