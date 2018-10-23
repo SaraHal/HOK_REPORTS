@@ -36,7 +36,7 @@ const mapReportData = (companyDetails, fee, collectionData) => {
         date: fee.date,
         month: dateForamt(new Date(fee.date), "mmmm yyyy"),
         data: collectionData.records.map(item => {
-            item.name = item.name.slice(-15);
+            item.name = item.name.slice(0,15);
             item.programNo = item.programNo.slice(-5);
             item.account = item.account.split(" ").reverse().join(" ")
             item.startDate = item.startDate.substr(4);
@@ -69,6 +69,9 @@ export const getReportContent = (companyKey, date) => {
     return getReportData(companyKey, date)
         .then(data => createHtml(data, './src/resources/collectionReport/template.html'))
         .then(html => createPdf(html, pdfReportConfig()));
+
+    //fs.writeFile('helloworld.html', html, function (err) { if (err) return console.log(err); console.log('Wrote Hello World in file helloworld.txt, just check it')}); 
+
 };
 
 
