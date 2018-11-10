@@ -5,7 +5,7 @@ import { dataPath } from '../../config.json';
 const dbfMapping = {
     "PAYNUM": "key",
     "LAKNUM": "customerKey",
-    "PAYHESH": "banckAccount",
+    "PAYHESH": "bankAccount",
     "DATEJOIN": "joinDate",
     "DATEOPEN": "openDate",
     "DATECLOSE": "closeDate",
@@ -21,7 +21,9 @@ const dbfMapping = {
 
 const handleGetPrograms = records => {
     return records.map((program) => {
-        return program;
+        return Object.assign({}, program, {
+            bankAccount: program.bankAccount && program.bankAccount.split(" ").reverse().join(" ")
+        })
     });
 }
 

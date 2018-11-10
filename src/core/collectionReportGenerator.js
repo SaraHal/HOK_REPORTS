@@ -28,11 +28,11 @@ export default class CollectionReportGenerator {
 
     _mapRecord(record) {
 
-        const { programKey, banckAccount, lastName, firstName, closeDate, openDate, sumShekel, sumDollar, city, street, phone, projectKey } = record;
+        const { programKey, bankAccount, lastName, firstName, closeDate, openDate, sumShekel, sumDollar, city, street, phone, projectKey } = record;
         return new CollectionReportRecordModel({
             projectKey
             , programNo: programKey
-            , account: banckAccount
+            , account: bankAccount
             , name: lastName + ' ' + firstName
             , endDate: closeDate
             , sum: (sumShekel + sumDollar * this.dollarRate).toFixed(2)
@@ -59,7 +59,7 @@ export default class CollectionReportGenerator {
                 });
             })
             .then(reportRecords => {
-                const _records = reportRecords.map(record => this._mapRecord(record));           
+                const _records = reportRecords.map(record => this._mapRecord(record));
                 return new CollectionReportModel({
                     organization: {
                         name: this.organization.name
