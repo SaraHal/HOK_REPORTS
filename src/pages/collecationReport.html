@@ -145,7 +145,7 @@
                         });
                 },
                 downloadZip: function () {
-                    const companyKeyList = this.companyList.filter(company => company.includeInZip).map(company => company.key);
+                    const companyKeyList = this.companyList.filter(company => company.includeInZip).map(company => company.data.key);
                     const self = this;
                     this.isDownloadingZip = true;
                     this.errorDownloadingZip = false;

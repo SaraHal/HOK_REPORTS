@@ -43,7 +43,7 @@
 
     <div class="header">
 
-        <h3>{{company.name }} </h3>
+        <h3>{{organization.name }} </h3>
 
         <h3> הוראות קבע ליום {{day}}</h3>
         <span> {{dollarRate}} = $ </span>
@@ -53,21 +53,20 @@
     </div>
     <table>
         <tr>
-            <td>{{header.reference}}</td>
-            <td>{{header.programNo}}</td>
-            <td>{{header.name}}</td>
-            <td>{{header.sum}}</td>
-            <td>{{header.account}}</td>
+            <td>מס. תוכנית</td>
+            <td>שם</td>
+            <td>סכום</td>
+            <td>חשבון</td>
 
-            <td>{{header.startDate}}</td>
-            <td>{{header.endDate}}</td>
-            <td colspan="3"> {{header.address}} \ {{header.telephone}}</td>
+            <td>ת. פתיחה</td>
+            <td>ת. סיום</td>
+            <td colspan="3"> כתובת \ טלפון</td>
 
 
         </tr>
-        {{#data}}
+        {{#records}}
         <tr>
-            <td>{{reference}}</td>
+
             <td>{{programNo}}</td>
             <td>{{name}}</td>
             <td>{{sum}}</td>
@@ -79,12 +78,12 @@
             <td> {{address}}</td>
             <td> {{telephone}}</td>
 
-        </tr>{{/data}}
+        </tr>{{/records}}
 
     </table>
 
     <div class="sum">
-        <b> סה"כ: {{totalSum}} ש"ח</b>
+        <b> סה"כ: {{sum}} ש"ח</b>
     </div>
 
 </body>
