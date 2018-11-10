@@ -1,23 +1,25 @@
 import express from 'express';
-import { getReportFile, getReportCompanyList, getReportFiles, postReportFile } from '../services/collectionReport'
+import CollectionReportService from '../services/collectionReport.service'
 import path from 'path';
 
 const reportRouter = express.Router();
+const _collectionReportService = new CollectionReportService();
 
 reportRouter.route('/api/company')
     .get(function (req, res, next) {
         var { date } = req.query;
-        getReportCompanyList(date)
+        _collectionReportService.getReportOrganizations(date)
             .then(data => res.send(data))
             .catch(next);
     });
 
 
-reportRouter.route('/api/:companyId')
+reportRouter.route('/api/:organizationKey')
     .get(function (req, res, next) {
-        const { companyId } = req.params,
+        const { organizationKey } = req.params,
             { date } = req.query;
-        getReportFile(date, companyId).then(data => res.send(data))
+        _collectionReportService.getReportFile(organizationKey, date)
+            .then(data => res.send(data))
             .catch(next);
     });
 
@@ -25,7 +27,7 @@ reportRouter.route('/api/:companyId')
     .post(function (req, res, next) {
         const { companyId } = req.params,
             { date } = req.query;
-        postReportFile(date, companyId)
+        _collectionReportService.postReportFile(companyId, date)
             .then(data => res.send(data))
             .catch(next);
     });
@@ -34,14 +36,14 @@ reportRouter.route('/api/')
     .get(function (req, res, next) {
         const { companyList } = req.query;
         const { date } = req.query;
-        getReportFiles(date, companyList)
+        _collectionReportService.getReportFiles(companyList, date)
             .then(data => res.send(data))
             .catch(next);
     });
 
 reportRouter.route('/')
     .get(function (req, res, next) {
-        console.log(path.join(__dirname, 'pages'),path.join(__dirname, '../pages'));
+        console.log(path.join(__dirname, 'pages'), path.join(__dirname, '../pages'));
         res.sendFile(path.join(__dirname, '../pages/collecationReport.html'));
     });
 
