@@ -37,6 +37,7 @@
     "express": "^4.16.2",
     "html-pdf": "^2.2.0",
     "iconv-lite": "^0.4.23",
+    "joi": "^14.0.2",
     "mustache": "^2.3.0",
     "nodemailer": "^4.6.8",
     "path-exists": "^3.0.0",

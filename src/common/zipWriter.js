@@ -11,7 +11,7 @@ export const getZip = files => {
     });
     archive.pipe(outputStreamBuffer);
     files.forEach(file => {
-        archive.append(file.buffer, { name: file.fileName });
+        archive.append(file.content, { name: file.fileName });
     })
 
     archive.finalize();
