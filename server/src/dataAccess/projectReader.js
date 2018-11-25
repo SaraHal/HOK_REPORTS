@@ -8,10 +8,12 @@ const dbfMapping = {
 }
 
 
-const handleGetProjects = records => {
-    return records.map((project) => {
+const handleGetProjects = (projects, mails) => {
+    return projects.map((project) => {
+        const mail = mails.find(mail => mail.key === project.key);
         return Object.assign({}, project, {
-            name: project.name && project['name'].split('').reverse().join('')
+            name: project.name && project['name'].split('').reverse().join(''),
+            email: mail && mail.name
         })
     });
 }
@@ -20,14 +22,18 @@ export default class ProjectReader {
 
     constructor(organizationKey) {
         this.path = `${dataPath}\\${organizationKey}\\DESTENY.DBF`;
+        this.mailPath = `${dataPath}\\${organizationKey}\\MAIL.DBF`;
     }
 
 
 
     getProjects() {
-        return dbfReader.read(this.path, dbfMapping).then(data => {
-            return handleGetProjects(data.records);
-        });
+        const readProjectsPromise = dbfReader.read(this.path, dbfMapping);
+        const readMailProjectsPromise = dbfReader.read(this.mailPath, dbfMapping);
+        return Promise.all([readProjectsPromise, readMailProjectsPromise])
+            .then(([projects, mails]) => {
+                return handleGetProjects(projects.records, mails.records);
+            });
     }
 
 

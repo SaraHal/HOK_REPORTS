@@ -32,7 +32,7 @@ export default class CollectionReportService {
             .then(([organization, file] = data) => {
                 return this.transporter.sendMail({
                     from: '"שירותי מחשב" <aa@gmail.com>',
-                    to:  organization.email,
+                    to: organization.email,
                     subject: `דוח גביה ליום ${date}`,
                     body: 'mail content...',
                     attachments: [{ filename: file.fileName, content: file.content }]
@@ -41,7 +41,7 @@ export default class CollectionReportService {
 
     }
 
-    getReportFile = (organizationKey, date) => {
+    getReportFile(organizationKey, date) {
         return this.organizationReader.getOrganization(organizationKey)
             .then(organization => this.feeReader.getCompanyFee(organization.code, date).then(fee => {
                 const collectionReportGenerator = new CollectionReportGenerator(organization, date, fee.dollarRate);
@@ -52,7 +52,7 @@ export default class CollectionReportService {
 
     }
 
-    getReportOrganizations = (date) => {
+    getReportOrganizations(date) {
         const getFeesPromise = this.feeReader.getFees(date);
         const getOrganizationsPromise = this.organizationReader.getOrganizations();
 
