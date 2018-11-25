@@ -3,8 +3,8 @@ export default class Project {
 
     constructor(project) {
 
-        const { key, name, organizaitionKey } = project;
-        Object.assign(this, { key, name, organizaitionKey });
+        const { key, name, organizaitionKey ,email} = project;
+        Object.assign(this, { key, name, organizaitionKey ,email});
 
         this._collectionReportService = new CollectionReportService();
     }
@@ -14,8 +14,9 @@ export default class Project {
             .getProjectReportFile(this.organizaitionKey, this.key, reportDate);
     }
 
-    postProject() {
-
+    postProject(reportDate) {
+        return this._collectionReportService
+            .sendProjectReportFile(this.organizaitionKey, this.key, reportDate);
     }
 
 }
