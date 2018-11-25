@@ -8,7 +8,7 @@ const dbfMapping = {
     "CODNOSE": "code",
     "ADRRES": "address",
     "YOMGVIA": 'collectionDate',
-    "EMAIL": 'email'
+    "EMAIL": 'email',  
 }
 
 const handleGetOrganizations = records => {
@@ -17,7 +17,7 @@ const handleGetOrganizations = records => {
         company.address = company.address && company['address'].split('').reverse().join('');
         company.isActive = company.collectionDate !== '88';
         return company;
-    });
+    }).filter(org=>org.isActive);
 }
 
 

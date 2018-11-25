@@ -70,7 +70,7 @@ Vue.component('organization', {
                     <span v-show={this.isSuccess} >      <i class="fas fa-check"></i>           </span>
 
                     <button class="btn btn-link" onClick={downloadFile}> <i class="fas fa-arrow-down"></i></button>
-                    <button class="btn btn-link" onClick={sendEmail}>  <i class="fas fa-envelope"></i></button>
+                    <button class="btn btn-link" onClick={sendEmail} disabled={email ? null : 'disabled'}>  <i class="fas fa-envelope"></i></button>
 
 
 

@@ -51,4 +51,12 @@ export default class CollectionReportService {
 
     }
 
+    sendProjectReportFile(organizationKey, projectKey, reportDate) {
+        var servicePath = `${this._serviceAddress}/${organizationKey}/${projectKey}?date=${reportDate}`;
+        return this._fetchHandler.fetch(servicePath, {
+            method: 'POST'
+        }).then(console.log);
+
+    }
+
 }

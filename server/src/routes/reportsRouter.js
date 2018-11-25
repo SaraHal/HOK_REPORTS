@@ -42,6 +42,16 @@ reportRouter.route('/api/:organizationKey/:projectKey')
             .catch(next);
     });
 
+reportRouter.route('/api/:organizationKey/:projectKey')
+    .post(function (req, res, next) {
+        const { organizationKey, projectKey } = req.params,
+            { date } = req.query;
+        _projectCollectionReportService.postReportFile(organizationKey, projectKey, date)
+            .then(data => res.send(data))
+            .catch(next);
+    });
+
+
 reportRouter.route('/api/:organizationKey')
     .post(function (req, res, next) {
         const { organizationKey } = req.params,
