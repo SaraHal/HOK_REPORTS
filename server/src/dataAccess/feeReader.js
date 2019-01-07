@@ -1,6 +1,5 @@
 
 import dbfReader from '../common/dbfReader';
-import { dataPath } from '../../config.json';
 import dateForamt from 'dateFormat';
 
 const dbfMapping = {
@@ -23,6 +22,7 @@ const handleGetFees = records => records.map(fee => {
 export default class FeeReader {
 
     constructor() {
+        const { DBPATH: dataPath } = process.env; 
         this.path = `${dataPath}\\AMLOT.DBF`;
     }
 

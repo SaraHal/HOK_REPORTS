@@ -1,6 +1,6 @@
 
 import dbfReader from '../common/dbfReader';
-import { dataPath } from '../../config.json';
+
 
 const dbfMapping = {
     "PAYNUM": "key",
@@ -30,6 +30,7 @@ const handleGetPrograms = records => {
 export default class ProgramReader {
 
     constructor(organizationKey) {
+        const { DBPATH: dataPath } = process.env; 
         this.path = `${dataPath}\\${organizationKey}\\PAY.DBF`;
     }
 

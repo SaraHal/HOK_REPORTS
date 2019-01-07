@@ -57,13 +57,16 @@ Vue.component('organization', {
 
             <div class="organization">
                 <div>
-                    <button class="btn btn-link" onClick={this.toggleProjects} v-show={!this.isOpenProjects}>  <i class="fas fa-angle-down"></i></button>
-                    <button class="btn btn-link" onClick={this.toggleProjects} v-show={this.isOpenProjects}>  <i class="fas fa-angle-left"></i></button>
+                    <button class="btn btn-link" onClick={this.toggleProjects} v-show={!this.isOpenProjects} disabled={projects.length ? null : 'disabled'}>  <i class="fas fa-angle-down"></i></button>
+                    <button class="btn btn-link" onClick={this.toggleProjects} v-show={this.isOpenProjects} disabled={projects.length ? null : 'disabled'}>  <i class="fas fa-angle-left"></i></button>
+                </div>
+                <div>
                     <span>{name}</span>
                 </div>
+                <div>
+                    <span>{email}</span>
+                </div>
 
-
-                <span>{email}</span>
                 <div class="actions">
                     <span v-show={this.isLoading} class="fas fa-spinner">                                </span>
                     <span v-show={this.isError} class="fas fa-exclamation">      הפעולה נכשלה               </span>
@@ -71,10 +74,6 @@ Vue.component('organization', {
 
                     <button class="btn btn-link" onClick={downloadFile}> <i class="fas fa-arrow-down"></i></button>
                     <button class="btn btn-link" onClick={sendEmail} disabled={email ? null : 'disabled'}>  <i class="fas fa-envelope"></i></button>
-
-
-
-
                 </div>
             </div>
             <div v-show={this.isOpenProjects}>

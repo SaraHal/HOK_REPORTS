@@ -46,7 +46,7 @@ export default class CollectionReportService {
             .then(organization => this.feeReader.getCompanyFee(organization.code, date).then(fee => {
                 const collectionReportGenerator = new CollectionReportGenerator(organization, date, fee.dollarRate);
                 return collectionReportGenerator.getReportBytes();
-            })).then(fileContent => {
+            })).then(fileContent => {            
                 return { fileName: `${organizationKey}${date}.pdf`, content: fileContent }
             });
 
@@ -57,13 +57,15 @@ export default class CollectionReportService {
         const getOrganizationsPromise = this.organizationReader.getOrganizations();
 
         return Promise.all([getFeesPromise, getOrganizationsPromise])
-            .then(([fees, organizations]) => fees.map(fee => {
-                return organizations.find(orgn => orgn.code === fee.organizationCode)
-            }))
-            .then(orgs => {
+            .then(([fees, organizations]) => {
+                const feeCodes = fees.map(fee => fee.organizationCode);
+                return organizations.filter(org => feeCodes.includes(org.code))
+            })
+            .then(orgs => {            
                 return Promise.all(orgs.map(org => new ProjectReader(org.key)
                     .getProjects()
                     .then(prjs => Object.assign({}, org, { projects: prjs }))
+
                 ))
             })
 

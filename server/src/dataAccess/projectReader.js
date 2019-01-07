@@ -1,6 +1,5 @@
 
 import dbfReader from '../common/dbfReader';
-import { dataPath } from '../../config.json';
 
 const dbfMapping = {
     "KOD": "key",
@@ -9,18 +8,21 @@ const dbfMapping = {
 
 
 const handleGetProjects = (projects, mails) => {
-    return projects.map((project) => {
-        const mail = mails.find(mail => mail.key === project.key);
-        return Object.assign({}, project, {
-            name: project.name && project['name'].split('').reverse().join(''),
-            email: mail && mail.name
-        })
-    });
+    return projects
+        .filter(project => !!(project.name && project.key))
+        .map((project) => {
+            const mail = mails.find(mail => mail.key === project.key);
+            return Object.assign({}, project, {
+                name: project.name && project['name'].split('').reverse().join(''),
+                email: mail && mail.name
+            })
+        });
 }
 
 export default class ProjectReader {
 
     constructor(organizationKey) {
+        const { DBPATH: dataPath } = process.env; 
         this.path = `${dataPath}\\${organizationKey}\\DESTENY.DBF`;
         this.mailPath = `${dataPath}\\${organizationKey}\\MAIL.DBF`;
     }
