@@ -1,6 +1,6 @@
 
 import dbfReader from '../common/dbfReader';
-import { dataPath } from '../../config.json';
+
 import dateForamt from 'dateFormat';
 
 const dbfMapping = {
@@ -18,6 +18,7 @@ const handleGetPrograms = records => {
 export default class CollectionReader {
 
     constructor(organizationKey, date) {
+        const { DBPATH: dataPath } = process.env; 
         this.path = `${dataPath}\\${organizationKey}\\hok_bank\\GV${dateForamt(new Date(date), 'ddmmyy')}.IDK`;
     }
 

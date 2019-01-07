@@ -3,7 +3,7 @@
 import pdfReportConfig from '../resources/collectionReport/pdfConfig'
 import { createPdf } from '../common/pdfCreator';
 import { createHtml } from '../common/htmlCreator';
-
+import path from 'path';
 
 
 import dateForamt from 'dateFormat'
@@ -28,14 +28,14 @@ export default class CollectionReportGenerator {
 
     _mapRecord(record) {
 
-        const { programKey, bankAccount, lastName, firstName, closeDate, openDate, sumShekel, sumDollar, city, street, phone, projectKey } = record;
+        const { programKey, bankAccount, lastName, firstName, closeDate, openDate, sumShekel, sumDollar, city, street, phone, projectKey, sum } = record;
         return new CollectionReportRecordModel({
             projectKey
             , programNo: programKey
             , account: bankAccount
             , name: lastName + ' ' + firstName
             , endDate: closeDate
-            , sum: (sumShekel + sumDollar * this.dollarRate).toFixed(2)
+            , sum: sum.toFixed(2)// (sumShekel + sumDollar * this.dollarRate).toFixed(2)
             , startDate: openDate
             , city
             , address: street
@@ -75,9 +75,9 @@ export default class CollectionReportGenerator {
             });
     }
 
-    getReportBytes() {
+    getReportBytes() {  
         return this.getReportData()
-            .then(data => createHtml(data, './src/resources/collectionReport/template.html'))
+            .then(data => createHtml(data, path.join(path.dirname(process.mainModule.filename), 'resources/collectionReport/template.html')))
             .then(html => createPdf(html, pdfReportConfig()));
     }
 }

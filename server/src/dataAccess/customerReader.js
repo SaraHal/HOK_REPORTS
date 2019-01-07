@@ -1,6 +1,5 @@
 
 import dbfReader from '../common/dbfReader';
-import { dataPath } from '../../config.json';
 
 const dbfMapping = {
     "LAKNUM": "key",
@@ -28,6 +27,7 @@ const handleGetCustomers = records => {
 export default class CustomerReader {
 
     constructor(organizationKey) {
+        const { DBPATH: dataPath } = process.env; 
         this.path = `${dataPath}\\${organizationKey}\\LAKOHOT.DBF`;
     }
 

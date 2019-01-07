@@ -2,7 +2,12 @@ import FetchHandler from './fetchHandler';
 import Organization from '../models/organization.model';
 export default class CollectionReportService {
     constructor() {
-        this._serviceAddress = 'http://localhost:3000/reports/api';
+
+        this._serviceAddress = '/reports/api'
+
+        if (window.location.hostname == 'localhost')
+            this._serviceAddress = 'http://localhost:3000/reports/api';
+
         this._fetchHandler = new FetchHandler();
     }
 

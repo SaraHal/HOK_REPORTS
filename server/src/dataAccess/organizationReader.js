@@ -1,6 +1,6 @@
 
 import dbfReader from '../common/dbfReader';
-import { dataPath } from '../../config.json';
+
 
 const dbfMapping = {
     "COMPANY": "key",
@@ -24,6 +24,7 @@ const handleGetOrganizations = records => {
 export default class OrganizationReader {
 
     constructor() {
+        const { DBPATH: dataPath } = process.env; 
         this.path = `${dataPath}\\CONFIG.DBF`;
     }
 
