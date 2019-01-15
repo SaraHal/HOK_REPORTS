@@ -1,6 +1,5 @@
 import Joi from 'joi';
-import CollectionReportModel from './collectionReport.model'
-
+import CollectionReportModel, { schema } from './collectionReport.model'
 
 
 export default class ProjectCollectionReportModel extends CollectionReportModel {

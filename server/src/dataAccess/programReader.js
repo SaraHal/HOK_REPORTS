@@ -1,6 +1,6 @@
 
 import dbfReader from '../common/dbfReader';
-
+import dateForamt from 'dateFormat';
 
 const dbfMapping = {
     "PAYNUM": "key",
@@ -30,7 +30,7 @@ const handleGetPrograms = records => {
 export default class ProgramReader {
 
     constructor(organizationKey) {
-        const { DBPATH: dataPath } = process.env; 
+        const { DBPATH: dataPath } = process.env;
         this.path = `${dataPath}\\${organizationKey}\\PAY.DBF`;
     }
 
@@ -40,9 +40,14 @@ export default class ProgramReader {
         });
     }
 
+    getFinishedPrograms(date) {
+        return this.getPrograms()
+            .then(prgs => prgs.filter(prg => dateForamt(new Date(prg.closeDate), "ddmmyyyy") === dateForamt(new Date(date), "ddmmyyyy")));
+    }
+
     getProjectPrograms(projectKey) {
         return this.getPrograms()
-            .filter(prg => prg.projectKey === projectKey);
+            .then(prgs => prgs.filter(prg => prg.projectKey === projectKey));
     }
 }
 

@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config()
 import express from 'express'
 import cors from 'cors'
-import createReportRouter from './routes/reportsRouter'
+import createCollectionReportRouter from './collectionReport/collectionReport.route'
+import createFinishedReportRouter from './finishedReport/finishedReport.route'
 import bodyParser from 'body-parser';
 import path from 'path'
 
@@ -15,7 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', express.static(path.join(__dirname, 'pages')))
 
-app.use('/reports', createReportRouter(app));
+app.use('/reports/collection', createCollectionReportRouter(app));
+app.use('/reports/finished', createFinishedReportRouter(app));
+
+app.get('/reports', function (req, res, next) {
+    req.url = '/reports.html';
+    app.handle(req, res, next);
+});
 
 // error handler
 app.use(function (err, req, res, next) {

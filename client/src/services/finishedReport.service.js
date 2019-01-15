@@ -3,10 +3,10 @@ import Organization from '../models/organization.model';
 export default class CollectionReportService {
     constructor() {
 
-        this._serviceAddress = '/reports/collection/api'
+        this._serviceAddress = '/reports/finished/api'
 
         if (window.location.hostname == 'localhost')
-            this._serviceAddress = 'http://localhost:3000/reports/collection/api';
+            this._serviceAddress = 'http://localhost:3000/reports/finished/api';
 
         this._fetchHandler = new FetchHandler();
     }
