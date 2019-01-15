@@ -1,7 +1,7 @@
 import express from 'express';
-import CollectionReportService from '../services/collectionReport.service'
-import ProjectCollectionReportService from '../services/projectCollectionReport.service'
-import path from 'path';
+import CollectionReportService from './services/collectionReport.service'
+import ProjectCollectionReportService from './services/projectCollectionReport.service'
+
 
 const createReportRouter = function (app) {
     const reportRouter = express.Router();
@@ -64,18 +64,10 @@ const createReportRouter = function (app) {
                 .catch(next);
         });
 
-    reportRouter.route('/api/')
-        .get(function (req, res, next) {
-            const { companyList } = req.query;
-            const { date } = req.query;
-            _collectionReportService.getReportFiles(companyList, date)
-                .then(data => res.send(data))
-                .catch(next);
-        });
-
+   
     reportRouter.route('/')
         .get(function (req, res, next) {
-             req.url = '/index.html';
+             req.url = '/collectionReport.html';
              app.handle(req, res, next);
        
 

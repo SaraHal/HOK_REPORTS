@@ -1,9 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 module.exports = {
     entry: {
-        bundle: './src/app.js'
+        finishedReport_bundle: './src/finishedReport.js',
+        collectionReport_bundle: './src/collectionReport.js',
+        reports_bundle: './src/reports.js',
+
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -40,7 +44,22 @@ module.exports = {
     devtool: 'eval-source-map',
     plugins: [
         new HtmlWebpackPlugin({
-            title:`הו"ק דוחות`
+            filename: 'finishedReport.html',
+            inlineSource: '.(js|css)$',
+            chunks: ['finishedReport_bundle'],
+            title: `הו"ק דוחות - דוח מסיימים`
+        }), new HtmlWebpackPlugin({
+            filename: 'collectionReport.html',
+            inlineSource: '.(js|css)$',
+            chunks: ['collectionReport_bundle'],
+            title: `הו"ק דוחות - דוח גביה`
         })
+        , new HtmlWebpackPlugin({
+            filename: 'reports.html',
+            inlineSource: '.(js|css)$',
+            chunks: ['reports_bundle'],
+            title: `הו"ק דוחות`
+        }),
+        new HtmlWebpackInlineSourcePlugin()
     ]
 };

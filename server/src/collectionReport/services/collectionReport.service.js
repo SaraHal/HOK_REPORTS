@@ -1,28 +1,21 @@
 
-import { getZip } from '../common/zipWriter';
 import nodemailer from 'nodemailer';
 
 import CollectionReportGenerator from '../core/collectionReportGenerator'
-import OrganizationReader from '../dataAccess/organizationReader';
-import FeeReader from '../dataAccess/feeReader';
-import ProjectReader from '../dataAccess/projectReader';
+import OrganizationReader from '../../dataAccess/organizationReader';
+import FeeReader from '../../dataAccess/feeReader';
+import ProjectReader from '../../dataAccess/projectReader';
 
 export default class CollectionReportService {
     constructor() {
         this.feeReader = new FeeReader();
         this.organizationReader = new OrganizationReader();
-
-        this.transporter = nodemailer.createTransport('smtp://a0504149062@gmail.com:hator9elad@smtp.gmail.com');
+        const { MAILADDRESS: mailAddress, MAILPASS: mailPassword } = process.env;
+        this.transporter = nodemailer.createTransport(`smtp://${mailAddress}:${mailPassword}@smtp.gmail.com`);
 
 
     }
-    getReportFiles(organizations, date) {
-        return Promise.all(organizations.map(key => {
-            return this.getReportFile(key, date);
-        }))
-            .then(getZip)
-            .then(zipFile => zipFile.toJSON())
-    };
+  
 
     postReportFile(organizationKey, date) {
         const getReportPromise = this.getReportFile(organizationKey, date);
@@ -46,7 +39,7 @@ export default class CollectionReportService {
             .then(organization => this.feeReader.getCompanyFee(organization.code, date).then(fee => {
                 const collectionReportGenerator = new CollectionReportGenerator(organization, date, fee.dollarRate);
                 return collectionReportGenerator.getReportBytes();
-            })).then(fileContent => {            
+            })).then(fileContent => {
                 return { fileName: `${organizationKey}${date}.pdf`, content: fileContent }
             });
 
@@ -61,7 +54,7 @@ export default class CollectionReportService {
                 const feeCodes = fees.map(fee => fee.organizationCode);
                 return organizations.filter(org => feeCodes.includes(org.code))
             })
-            .then(orgs => {            
+            .then(orgs => {
                 return Promise.all(orgs.map(org => new ProjectReader(org.key)
                     .getProjects()
                     .then(prjs => Object.assign({}, org, { projects: prjs }))

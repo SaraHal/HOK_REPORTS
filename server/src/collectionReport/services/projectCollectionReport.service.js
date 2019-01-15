@@ -1,18 +1,18 @@
 
-import { getZip } from '../common/zipWriter';
+
 import nodemailer from 'nodemailer';
 
 import ProjectCollectionReportGenerator from '../core/projectCollectiontReportGenerator';
-import OrganizationReader from '../dataAccess/organizationReader';
-import FeeReader from '../dataAccess/feeReader';
-import ProjectReader from '../dataAccess/projectReader';
+import OrganizationReader from '../../dataAccess/organizationReader';
+import FeeReader from '../../dataAccess/feeReader';
+import ProjectReader from '../../dataAccess/projectReader';
 
 export default class ProjectCollectionReportService {
     constructor() {
         this.feeReader = new FeeReader();
         this.organizationReader = new OrganizationReader();
-
-        this.transporter = nodemailer.createTransport('smtp://a0504149062@gmail.com:hator9elad@smtp.gmail.com');
+        const { MAILADDRESS: mailAddress, MAILPASS: mailPassword } = process.env;
+        this.transporter = nodemailer.createTransport(`smtp://${mailAddress}:${mailPassword}@smtp.gmail.com`);
 
     }
 
@@ -46,7 +46,6 @@ export default class ProjectCollectionReportService {
             })).then(fileContent => {
                 return { fileName: `${organizationKey}_${projectKey}_${date}.pdf`, content: fileContent }
             });
-
     }
 
     getOrganizationProjects(organizationKey) {

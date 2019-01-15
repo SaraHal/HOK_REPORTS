@@ -1,21 +1,21 @@
 
 
-import pdfReportConfig from '../resources/collectionReport/pdfConfig'
-import { createPdf } from '../common/pdfCreator';
-import { createHtml } from '../common/htmlCreator';
-
+import pdfReportConfig from '../../resources/collectionReport/pdfConfig'
+import { createPdf } from '../../common/pdfCreator';
+import { createHtml } from '../../common/htmlCreator';
+import path from 'path';
 
 
 import dateForamt from 'dateFormat'
-import CollectionReader from '../dataAccess/collectionReader';
-import ProgramReader from '../dataAccess/programReader';
-import CustomerReader from '../dataAccess/customerReader';
-import ProjectCollectionReportModel from '../models/projectCollectionReport.model';
+import CollectionReader from '../../dataAccess/collectionReader';
+import ProgramReader from '../../dataAccess/programReader';
+import CustomerReader from '../../dataAccess/customerReader';
+import CollectionReportModel from '../models/collectionReport.model';
 import CollectionReportRecordModel from '../models/collectionReportRecord.model'
 
-export default class ProjectCollectionReportGenerator {
+export default class CollectionReportGenerator {
 
-    constructor(organization, project, date, dollarRate) {
+    constructor(organization, date, dollarRate) {
 
         this.collectionReader = new CollectionReader(organization.key, date);
         this.programReader = new ProgramReader(organization.key);
@@ -24,19 +24,18 @@ export default class ProjectCollectionReportGenerator {
         this.organization = organization;
         this.date = date;
         this.dollarRate = dollarRate;
-        this.project = project;
     }
 
     _mapRecord(record) {
 
-        const { programKey, bankAccount, lastName, firstName, closeDate, openDate, sumShekel, sumDollar, city, street, phone, projectKey } = record;
+        const { programKey, bankAccount, lastName, firstName, closeDate, openDate, city, street, phone, projectKey, sum } = record;
         return new CollectionReportRecordModel({
             projectKey
             , programNo: programKey
             , account: bankAccount
             , name: lastName + ' ' + firstName
             , endDate: closeDate
-            , sum: (sumShekel + sumDollar * this.dollarRate).toFixed(2)
+            , sum: sum.toFixed(2)// (sumShekel + sumDollar * this.dollarRate).toFixed(2)
             , startDate: openDate
             , city
             , address: street
@@ -60,15 +59,12 @@ export default class ProjectCollectionReportGenerator {
                 });
             })
             .then(reportRecords => {
-                const _records = reportRecords
-                    .map(record => this._mapRecord(record))
-                    .filter(record => record.projectKey === this.project.key);
-                return new ProjectCollectionReportModel({
+                const _records = reportRecords.map(record => this._mapRecord(record));
+                return new CollectionReportModel({
                     organization: {
                         name: this.organization.name
                         , address: this.organization.address
                     }
-                    , project: this.project
                     , dollarRate: this.dollarRate
                     , day: dateForamt(new Date(this.date), "dd")
                     , month: dateForamt(new Date(this.date), "mmmm yyyy")
@@ -81,7 +77,7 @@ export default class ProjectCollectionReportGenerator {
 
     getReportBytes() {
         return this.getReportData()
-            .then(data => createHtml(data, './src/resources/collectionReport/template.html'))
+            .then(data => createHtml(data, path.join(path.dirname(process.mainModule.filename), 'resources/collectionReport/template.html')))
             .then(html => createPdf(html, pdfReportConfig()));
     }
 }

@@ -19,9 +19,6 @@ Vue.component('date-picker', {
             </div>
         </form >
 
-
-
-
     }
 
 })
