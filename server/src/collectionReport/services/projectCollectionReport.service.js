@@ -42,9 +42,9 @@ export default class ProjectCollectionReportService {
         return Promise.all([getOrganizationPromise, getProjectPromise])
             .then(([organization, project]) => this.feeReader.getCompanyFee(organization.code, date).then(fee => {
                 const collectionReportGenerator = new ProjectCollectionReportGenerator(organization, project, date, fee.dollarRate);
-                return collectionReportGenerator.getReportBytes();
-            })).then(fileContent => {
-                return { fileName: `${organizationKey}_${projectKey}_${date}.pdf`, content: fileContent }
+                return Promise.all([organization, collectionReportGenerator.getReportBytes()]);
+            })).then(([organization, fileContent]) => {
+                return { fileName: `${organization.name}_${projectKey} - גביה ${date}.pdf`, content: fileContent }
             });
     }
 
