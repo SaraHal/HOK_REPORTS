@@ -24,7 +24,7 @@ export default class FinishedReportService {
                 return this.transporter.sendMail({
                     from: '"שירותי מחשב" <aa@gmail.com>',
                     to: organization.email,
-                    subject: `דוח גביה ליום ${date}`,
+                    subject: `דוח מסיימים ליום ${date}`,
                     body: 'mail content...',
                     attachments: [{ filename: file.fileName, content: file.content }]
                 });
@@ -32,12 +32,13 @@ export default class FinishedReportService {
     }
 
     getReportFile(organizationKey, date) {
-        return this.organizationReader.getOrganization(organizationKey)
+        const getOrganizationPromise = this.organizationReader.getOrganization(organizationKey);
+        return getOrganizationPromise
             .then(organization => {
                 const finishedReportGenerator = new FinishedReportGenerator(organization, date);
-                return finishedReportGenerator.getReportBytes();
-            }).then(fileContent => {
-                return { fileName: `${organizationKey}${date}.pdf`, content: fileContent }
+                return Promise.all([organization, finishedReportGenerator.getReportBytes()]);
+            }).then(([organization, fileContent]) => {
+                return { fileName: `${organization.name} - מסיימים ${date}.pdf`, content: fileContent }
             });
     }
 
@@ -60,6 +61,6 @@ export default class FinishedReportService {
 
                     ))
             })
-      
+
     };
 }

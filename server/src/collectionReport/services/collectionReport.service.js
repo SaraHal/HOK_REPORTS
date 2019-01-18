@@ -38,11 +38,10 @@ export default class CollectionReportService {
         return this.organizationReader.getOrganization(organizationKey)
             .then(organization => this.feeReader.getCompanyFee(organization.code, date).then(fee => {
                 const collectionReportGenerator = new CollectionReportGenerator(organization, date, fee.dollarRate);
-                return collectionReportGenerator.getReportBytes();
-            })).then(fileContent => {
-                return { fileName: `${organizationKey}${date}.pdf`, content: fileContent }
-            });
-
+                return Promise.all([organization, collectionReportGenerator.getReportBytes()]); 
+            })).then(([organization, fileContent]) => {
+                return { fileName: `${organization.name} - גביה ${date}.pdf`, content: fileContent }     
+            });           
     }
 
     getReportOrganizations(date) {

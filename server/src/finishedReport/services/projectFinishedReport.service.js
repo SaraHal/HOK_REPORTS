@@ -27,7 +27,7 @@ export default class ProjectFinishedReportService {
                 return this.transporter.sendMail({
                     from: '"שירותי מחשב" <aa@gmail.com>',
                     to: project.email,
-                    subject: `${project.name} - דוח גביה ליום ${date}`,
+                    subject: `${project.name} - דוח מסיימים ליום ${date}`,
                     body: 'mail content...',
                     attachments: [{ filename: file.fileName, content: file.content }]
                 });
@@ -41,10 +41,10 @@ export default class ProjectFinishedReportService {
 
         return Promise.all([getOrganizationPromise, getProjectPromise])
             .then(([organization, project]) => this.feeReader.getCompanyFee(organization.code, date).then(fee => {
-                const finishedReportGenerator = new ProjectFinishedReportGenerator(organization, project, date, fee.dollarRate);
-                return finishedReportGenerator.getReportBytes();
-            })).then(fileContent => {
-                return { fileName: `${organizationKey}_${projectKey}_${date}.pdf`, content: fileContent }
+                const finishedReportGenerator = new ProjectFinishedReportGenerator(organization, project, date, fee.dollarRate);              
+                return Promise.all([organization, finishedReportGenerator.getReportBytes()]);
+            })).then(([organization, fileContent]) => {
+                 return { fileName: `${organization.name}_${projectKey} - מסיימים ${date}.pdf`, content: fileContent }
             });
     }
 

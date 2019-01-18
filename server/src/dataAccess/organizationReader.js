@@ -13,7 +13,7 @@ const dbfMapping = {
 
 const handleGetOrganizations = records => {
     return records.map((company) => {
-        company.name = company.name && company['name'].split('').reverse().join('');
+        company.name = company.name && company['name'].split('').reverse().join('').replace(/([^a-z0-9א-ת ]+)/gi, '-');
         company.address = company.address && company['address'].split('').reverse().join('');
         company.isActive = company.collectionDate !== '88';
         return company;
