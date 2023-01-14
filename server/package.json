@@ -30,7 +30,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "nodemon": "^1.17.5",
     "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "archiver": "^2.1.1",
